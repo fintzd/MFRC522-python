@@ -127,7 +127,6 @@ class MFRC522:
         
     serNum = []
     
-
     def __init__(self, bus=0, device=0, spd=1000000):
         # setup spi
         self.spi = spidev.SpiDev()
@@ -138,19 +137,96 @@ class MFRC522:
         GPIO.setup(self.RSTGPIO, GPIO.OUT)
         GPIO.output(self.RSTGPIO, 1)
         # initialise
-        self.MFRC522_Init()
-        
+        self.Init()
         
     def Reset_MFRC522(self):
         self.Write_MFRC522(self.CommandReg, self.PCD_RESETPHASE)
-    
-    
+        
     def Write_MFRC522(self, addr, val):
         val = self.spi.xfer2([(addr << 1) & 0x7E, val])
-    
-    
+        
     def Read_MFRC522(self, addr):
         val = self.spi.xfer2([((addr << 1) & 0x7E) | 0x80, 0])
         return val[1]
+    
+    def SetBitMask_MFRC522(self, reg, mask):
+        tmp = self.Read_MFRC522(reg)
+        self.Write_MFRC522(reg, tmp | mask)
+    
+    def ClearBitMask_MFRC522(self, reg, mask):
+        tmp = self.Read_MFRC522(reg)
+        self.Write_MFRC522(reg, tmp & (~mask))
+        
+    def AntennaOn_MFRC522(self):
+        temp = self.Read_MFRC522(self.TxControlReg)
+        if (~(temp & 0x03)):
+            self.SetBitMask_MFRC522(self.TxControlReg, 0x03)
+    
+    def AntennaOff_MFRC522(self):
+        self.ClearBitMask_MFRC522(self.TxControlReg, 0x03)
+    
+    def Communicate_MFRC522(self, command, sendData):
+        backData = []
+        backLen = 0
+        status = self.MI_ERR
+        irqEn = 0x00
+        waitIRq = 0x00
+        lastBits = None
+        n = 0
 
+        if command == self.PCD_AUTHENT:
+            irqEn = 0x12
+            waitIRq = 0x10
+        if command == self.PCD_TRANSCEIVE:
+            irqEn = 0x77
+            waitIRq = 0x30
 
+        self.Write_MFRC522(self.CommIEnReg, irqEn | 0x80)
+        self.ClearBitMask_MFRC522(self.CommIrqReg, 0x80)
+        self.SetBitMask_MFRC522(self.FIFOLevelReg, 0x80)
+
+        self.Write_MFRC522(self.CommandReg, self.PCD_IDLE)
+
+        for i in range(len(sendData)):
+            self.Write_MFRC522(self.FIFODataReg, sendData[i])
+
+        self.Write_MFRC522(self.CommandReg, command)
+
+        if command == self.PCD_TRANSCEIVE:
+            self.SetBitMask_MFRC522(self.BitFramingReg, 0x80)
+
+        i = 2000
+        while True:
+            sleep(0.01)
+            n = self.Read_MFRC522(self.CommIrqReg)
+            i -= 1
+            if not ((i != 0) and not (n & 0x01) and not (n & waitIRq)):
+                break
+
+        self.ClearBitMask_MFRC522(self.BitFramingReg, 0x80)
+
+        if i != 0:
+            if (self.Read_MFRC522(self.ErrorReg) & 0x1B) == 0x00:
+                status = self.MI_OK
+
+                if n & irqEn & 0x01:
+                    status = self.MI_NOTAGERR
+
+                if command == self.PCD_TRANSCEIVE:
+                    n = self.Read_MFRC522(self.FIFOLevelReg)
+                    lastBits = self.Read_MFRC522(self.ControlReg) & 0x07
+                    if lastBits != 0:
+                        backLen = (n - 1) * 8 + lastBits
+                    else:
+                        backLen = n * 8
+
+                    if n == 0:
+                        n = 1
+                    if n > self.MAX_LEN:
+                        n = self.MAX_LEN
+
+                    for i in range(n):
+                        backData.append(self.Read_MFRC522(self.FIFODataReg))
+            else:
+                status = self.MI_ERR
+        return (status, backData, backLen)
