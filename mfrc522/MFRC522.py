@@ -311,8 +311,7 @@ class MFRC522:
         
         if (status == self.MI_OK) and (backLen == 0x18):
             return backData[0]
-        else:
-            return 0
+        return 0
         
         
     def Auth_MFRC522(self, authMode, BlockAddr, Sectorkey, serNum):
