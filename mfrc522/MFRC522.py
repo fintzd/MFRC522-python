@@ -274,8 +274,8 @@ class MFRC522:
     def CalulateCRC_MFRC522(self, pIndata):
         self.ClearBitMask_MFRC522(self.DivIrqReg, 0x04)
         self.SetBitMask_MFRC522(self.FIFOLevelReg, 0x80)
-
-        for i in range(len(pIndata)):
+        
+        for i, item in enumerate(pIndata):
             self.Write_MFRC522(self.FIFODataReg, pIndata[i])
 
         self.Write_MFRC522(self.CommandReg, self.PCD_CALCCRC)
@@ -295,19 +295,19 @@ class MFRC522:
     
     def SelectTag_MFRC522(self, serNum):
         backData = []
-        buf = []
-        buf.append(self.PICC_SElECTTAG)
-        buf.append(0x70)
+        buff = []
+        buff.append(self.PICC_SElECTTAG)
+        buff.append(0x70)
         
         for i in range(5):
-            buf.append(serNum[i])
+            buff.append(serNum[i])
         
-        pOut = self.CalulateCRC_MFRC522(buf)
+        pOut = self.CalulateCRC_MFRC522(buff)
         
-        buf.append(pOut[0])
-        buf.append(pOut[1])
+        buff.append(pOut[0])
+        buff.append(pOut[1])
         
-        (status, backData, backLen) = self.Communicate_MFRC522(self.PCD_TRANSCEIVE, buf)
+        (status, backData, backLen) = self.Communicate_MFRC522(self.PCD_TRANSCEIVE, buff)
         
         if (status == self.MI_OK) and (backLen == 0x18):
             return backData[0]
@@ -319,7 +319,7 @@ class MFRC522:
         buff.append(authMode)
         buff.append(BlockAddr)
         
-        for i in range(len(Sectorkey)):
+        for i, item in enumerate(Sectorkey):
             buff.append(Sectorkey[i])
         
         for i in range(4):
