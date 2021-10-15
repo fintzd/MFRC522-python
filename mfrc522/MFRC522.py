@@ -186,8 +186,8 @@ class MFRC522:
         self.SetBitMask_MFRC522(self.FIFOLevelReg, 0x80)
 
         self.Write_MFRC522(self.CommandReg, self.PCD_IDLE)
-
-        for i in range(len(sendData)):
+        
+        for i, item in enumerate(sendData):
             self.Write_MFRC522(self.FIFODataReg, sendData[i])
 
         self.Write_MFRC522(self.CommandReg, command)
