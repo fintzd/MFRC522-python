@@ -20,7 +20,7 @@
 
 
 import RPi.GPIO as GPIO
-import spi
+import spidev
 import signal
 from time import sleep
 import logging
@@ -127,3 +127,16 @@ class MFRC522:
         
     serNum = []
     
+
+    def __init__(self, bus=0, device=0, spd=1000000):
+        # setup spi
+        self.spi = spidev.SpiDev()
+        self.spi.open(bus, device)
+        self.spi.max_speed_hz = spd
+        # setup GPIO
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(self.RSTGPIO, GPIO.OUT)
+        GPIO.output(self.RSTGPIO, 1)
+        self.MFRC522_Init()
+
+        
