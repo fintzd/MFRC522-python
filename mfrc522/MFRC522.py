@@ -230,3 +230,42 @@ class MFRC522:
             else:
                 status = self.MI_ERR
         return (status, backData, backLen)
+    
+    
+    def Request_MFRC522(self, reqMode):
+        status = None
+        backBits = None
+        TagType = []
+        
+        self.Write_MFRC522(self.BitFramingReg, 0x07)
+        TagType.append(reqMode)
+        
+        (status, backData, backBits) = self.Communicate_MFRC522(self.PCD_TRANSCEIVE, TagType)
+        
+        if ((status != self.MI_OK) | (backBits != 0x10)):
+            status = self.MI_ERR
+        
+        return (status, backBits)
+    
+    
+    def Anticoll_MFRC522(self):
+        backData = []
+        serNumCheck = 0
+        serNum = []
+
+        self.Write_MFRC522(self.BitFramingReg, 0x00)
+
+        serNum.append(self.PICC_ANTICOLL)
+        serNum.append(0x20)
+
+        (status, backData, backBits) = self.Communicate_MFRC522(self.PCD_TRANSCEIVE, serNum)
+
+        if (status == self.MI_OK):
+            if len(backData) == 5:
+                for i in range(4):
+                    serNumCheck = serNumCheck ^ backData[i]
+                if serNumCheck != backData[4]:
+                    status = self.MI_ERR
+            else:
+                status = self.MI_ERR
+        return (status, backData)
