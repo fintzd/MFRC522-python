@@ -137,6 +137,7 @@ class MFRC522:
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.RSTGPIO, GPIO.OUT)
         GPIO.output(self.RSTGPIO, 1)
+        # initialise
         self.MFRC522_Init()
 
         
