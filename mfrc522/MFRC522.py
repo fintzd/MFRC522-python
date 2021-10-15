@@ -269,3 +269,139 @@ class MFRC522:
             else:
                 status = self.MI_ERR
         return (status, backData)
+    
+    
+    def CalulateCRC_MFRC522(self, pIndata):
+        self.ClearBitMask_MFRC522(self.DivIrqReg, 0x04)
+        self.SetBitMask_MFRC522(self.FIFOLevelReg, 0x80)
+
+        for i in range(len(pIndata)):
+            self.Write_MFRC522(self.FIFODataReg, pIndata[i])
+
+        self.Write_MFRC522(self.CommandReg, self.PCD_CALCCRC)
+        
+        i = 0xFF
+        while True:
+            n = self.Read_MFRC522(self.DivIrqReg)
+            i -= 1
+            if not ((i != 0) and not (n & 0x04)):
+                break
+        
+        pOutData = []
+        pOutData.append(self.Read_MFRC522(self.CRCResultRegL))
+        pOutData.append(self.Read_MFRC522(self.CRCResultRegM))
+        return pOutData
+    
+    
+    def SelectTag_MFRC522(self, serNum):
+        backData = []
+        buf = []
+        buf.append(self.PICC_SElECTTAG)
+        buf.append(0x70)
+        
+        for i in range(5):
+            buf.append(serNum[i])
+        
+        pOut = self.CalulateCRC_MFRC522(buf)
+        
+        buf.append(pOut[0])
+        buf.append(pOut[1])
+        
+        (status, backData, backLen) = self.Communicate_MFRC522(self.PCD_TRANSCEIVE, buf)
+        
+        if (status == self.MI_OK) and (backLen == 0x18):
+            return backData[0]
+        else:
+            return 0
+        
+        
+    def Auth_MFRC522(self, authMode, BlockAddr, Sectorkey, serNum):
+        buff = []
+        buff.append(authMode)
+        buff.append(BlockAddr)
+        
+        for i in range(len(Sectorkey)):
+            buff.append(Sectorkey[i])
+        
+        for i in range(4):
+            buff.append(serNum[i])
+        
+        (status, backData, backLen) = self.Communicate_MFRC522(self.PCD_AUTHENT, buff)
+        return status
+    
+    
+    def StopCrypto1_MFRC522(self):
+        self.ClearBitMask_MFRC522(self.Status2Reg, 0x08)
+    
+    
+    def Read(self, blockAddr):
+        recvData = []
+        recvData.append(self.PICC_READ)
+        recvData.append(blockAddr)
+        
+        pOut = self.CalulateCRC_MFRC522(recvData)
+        
+        recvData.append(pOut[0])
+        recvData.append(pOut[1])
+        
+        (status, backData, backLen) = self.Communicate_MFRC522(self.PCD_TRANSCEIVE, recvData)
+        
+        if not (status == self.MI_OK):
+            print("Reading error")
+        return backData
+    
+    
+    def Write(self, blockAddr, writeData):
+        buff = []
+        buff.append(self.PICC_WRITE)
+        buff.append(blockAddr)
+        
+        crc = self.CalulateCRC_MFRC522(buff)
+        
+        buff.append(crc[0])
+        buff.append(crc[1])
+        
+        (status, backData, backLen) = self.Communicate_MFRC522(self.PCD_TRANSCEIVE, buff)
+        
+        if not (status == self.MI_OK) or not (backLen == 4) or not ((backData[0] & 0x0F) == 0x0A):
+            status = self.MI_ERR
+        
+        if status == self.MI_OK:
+            buff = []
+            
+            for i in range(16):
+                buff.append(writeData[i])
+                
+            crc = self.CalulateCRC_MFRC522(buff)
+            
+            buff.append(crc[0])
+            buff.append(crc[1])
+            
+            (status, backData, backLen) = self.Communicate_MFRC522(self.PCD_TRANSCEIVE, buff)
+            
+            if not (status == self.MI_OK) or not (backLen == 4) or not ((backData[0] & 0x0F) == 0x0A):
+                status = self.MI_ERR
+                print("Writing error")
+                
+        return status
+    
+    
+
+    def DumpClassic1K(self, key, uid):
+        for i in range(64):
+            status = self.Auth_MFRC522(self.PICC_AUTHENT1A, i, key, uid)
+            if status == self.MI_OK:
+                self.MFRC522_Read(i)
+            else:
+                print("Authentication error")
+    
+    
+    def Init(self):
+        self.Reset_MFRC522()
+        self.Write_MFRC522(self.TModeReg, 0x8D)
+        self.Write_MFRC522(self.TPrescalerReg, 0x3E)
+        self.Write_MFRC522(self.TReloadRegL, 30)
+        self.Write_MFRC522(self.TReloadRegH, 0)
+        self.Write_MFRC522(self.TxAutoReg, 0x40)
+        self.Write_MFRC522(self.ModeReg, 0x3D)
+        self.AntennaOn_MFRC522()
