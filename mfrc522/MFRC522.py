@@ -5,17 +5,17 @@
 #    Copyright 2021
 #
 #    This file is part of MFRC522-Python.
-# 
+#
 #    MFRC522-Python is a simple Python implementation for the MFRC522 NFC Card Reader
 #    for the Raspberry Pi.
 #
-#    This is a free software: 
-#    You can redistribute it and/or modify it under the terms of the GNU Lesser General 
-#    Public License as published by the Free Software Foundation, either version 3 of 
+#    This is a free software:
+#    You can redistribute it and/or modify it under the terms of the GNU Lesser General
+#    Public License as published by the Free Software Foundation, either version 3 of
 #    the License, or (at your option) any later version.
 #
 #    MFRC522-Python is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-#    without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+#    without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 #    See the GNU Lesser General Public License for more details.
 
 
@@ -26,9 +26,9 @@ from time import sleep
 
 class MFRC522:
     RSTGPIO             = 25
-    
+
     MAX_LEN             = 16
-    
+
     PCD_IDLE            = 0x00
     PCD_AUTHENT         = 0x0E
     PCD_RECEIVE         = 0x08
@@ -36,7 +36,7 @@ class MFRC522:
     PCD_TRANSCEIVE      = 0x0C
     PCD_RESETPHASE      = 0x0F
     PCD_CALCCRC         = 0x03
-    
+
     PICC_REQIDL         = 0x26
     PICC_REQALL         = 0x52
     PICC_ANTICOLL       = 0x93
@@ -50,11 +50,11 @@ class MFRC522:
     PICC_RESTORE        = 0xC2
     PICC_TRANSFER       = 0xB0
     PICC_HALT           = 0x50
-    
+
     MI_OK               = 0
     MI_NOTAGERR         = 1
     MI_ERR              = 2
-    
+
     Reserved00          = 0x00
     CommandReg          = 0x01
     CommIEnReg          = 0x02
@@ -71,7 +71,7 @@ class MFRC522:
     BitFramingReg       = 0x0D
     CollReg             = 0x0E
     Reserved01          = 0x0F
-    
+
     Reserved10          = 0x10
     ModeReg             = 0x11
     TxModeReg           = 0x12
@@ -88,7 +88,7 @@ class MFRC522:
     Reserved13          = 0x1D
     Reserved14          = 0x1E
     SerialSpeedReg      = 0x1F
-    
+
     Reserved20          = 0x20
     CRCResultRegM       = 0x21
     CRCResultRegL       = 0x22
@@ -122,9 +122,9 @@ class MFRC522:
     Reserved32          = 0x3D
     Reserved33          = 0x3E
     Reserved34          = 0x3F
-        
+
     serNum = []
-    
+
     def __init__(self, bus=0, device=0, spd=1000000):
         # setup spi
         self.spi = spidev.SpiDev()
@@ -136,33 +136,33 @@ class MFRC522:
         GPIO.output(self.RSTGPIO, 1)
         # initialise
         self.Init()
-        
+
     def Reset_MFRC522(self):
         self.Write_MFRC522(self.CommandReg, self.PCD_RESETPHASE)
-        
+
     def Write_MFRC522(self, addr, val):
         val = self.spi.xfer2([(addr << 1) & 0x7E, val])
-        
+
     def Read_MFRC522(self, addr):
         val = self.spi.xfer2([((addr << 1) & 0x7E) | 0x80, 0])
         return val[1]
-    
+
     def SetBitMask_MFRC522(self, reg, mask):
         tmp = self.Read_MFRC522(reg)
         self.Write_MFRC522(reg, tmp | mask)
-    
+
     def ClearBitMask_MFRC522(self, reg, mask):
         tmp = self.Read_MFRC522(reg)
         self.Write_MFRC522(reg, tmp & (~mask))
-        
+
     def AntennaOn_MFRC522(self):
         temp = self.Read_MFRC522(self.TxControlReg)
         if (~(temp & 0x03)):
             self.SetBitMask_MFRC522(self.TxControlReg, 0x03)
-    
+
     def AntennaOff_MFRC522(self):
         self.ClearBitMask_MFRC522(self.TxControlReg, 0x03)
-    
+
     def Communicate_MFRC522(self, command, sendData):
         backData = []
         backLen = 0
@@ -228,24 +228,24 @@ class MFRC522:
             else:
                 status = self.MI_ERR
         return (status, backData, backLen)
-    
-    
+
+
     def Request_MFRC522(self, reqMode):
         status = None
         backBits = None
         TagType = []
-        
+
         self.Write_MFRC522(self.BitFramingReg, 0x07)
         TagType.append(reqMode)
-        
+
         (status, backData, backBits) = self.Communicate_MFRC522(self.PCD_TRANSCEIVE, TagType)
-        
+
         if ((status != self.MI_OK) | (backBits != 0x10)):
             status = self.MI_ERR
-        
+
         return (status, backBits)
-    
-    
+
+
     def Anticoll_MFRC522(self):
         backData = []
         serNumCheck = 0
@@ -267,122 +267,122 @@ class MFRC522:
             else:
                 status = self.MI_ERR
         return (status, backData)
-    
-    
+
+
     def CalulateCRC_MFRC522(self, pIndata):
         self.ClearBitMask_MFRC522(self.DivIrqReg, 0x04)
         self.SetBitMask_MFRC522(self.FIFOLevelReg, 0x80)
-        
+
         for i, item in enumerate(pIndata):
             self.Write_MFRC522(self.FIFODataReg, pIndata[i])
 
         self.Write_MFRC522(self.CommandReg, self.PCD_CALCCRC)
-        
+
         i = 0xFF
         while True:
             n = self.Read_MFRC522(self.DivIrqReg)
             i -= 1
             if not ((i != 0) and not (n & 0x04)):
                 break
-        
+
         pOutData = []
         pOutData.append(self.Read_MFRC522(self.CRCResultRegL))
         pOutData.append(self.Read_MFRC522(self.CRCResultRegM))
         return pOutData
-    
-    
+
+
     def SelectTag_MFRC522(self, serNum):
         backData = []
         buff = []
         buff.append(self.PICC_SELECTTAG)
         buff.append(0x70)
-        
+
         for i in range(5):
             buff.append(serNum[i])
-        
+
         pOut = self.CalulateCRC_MFRC522(buff)
-        
+
         buff.append(pOut[0])
         buff.append(pOut[1])
-        
+
         (status, backData, backLen) = self.Communicate_MFRC522(self.PCD_TRANSCEIVE, buff)
-        
+
         if (status == self.MI_OK) and (backLen == 0x18):
             return backData[0]
         return 0
-        
-        
+
+
     def Auth_MFRC522(self, authMode, BlockAddr, Sectorkey, serNum):
         buff = []
         buff.append(authMode)
         buff.append(BlockAddr)
-        
+
         for i, item in enumerate(Sectorkey):
             buff.append(Sectorkey[i])
-        
+
         for i in range(4):
             buff.append(serNum[i])
-        
+
         (status, backData, backLen) = self.Communicate_MFRC522(self.PCD_AUTHENT, buff)
         return status
-    
-    
+
+
     def StopCrypto1_MFRC522(self):
         self.ClearBitMask_MFRC522(self.Status2Reg, 0x08)
-    
-    
+
+
     def Read(self, blockAddr):
         recvData = []
         recvData.append(self.PICC_READ)
         recvData.append(blockAddr)
-        
+
         pOut = self.CalulateCRC_MFRC522(recvData)
-        
+
         recvData.append(pOut[0])
         recvData.append(pOut[1])
-        
+
         (status, backData, backLen) = self.Communicate_MFRC522(self.PCD_TRANSCEIVE, recvData)
-        
+
         if not (status == self.MI_OK):
             print("Reading error")
         return backData
-    
-    
+
+
     def Write(self, blockAddr, writeData):
         buff = []
         buff.append(self.PICC_WRITE)
         buff.append(blockAddr)
-        
+
         crc = self.CalulateCRC_MFRC522(buff)
-        
+
         buff.append(crc[0])
         buff.append(crc[1])
-        
+
         (status, backData, backLen) = self.Communicate_MFRC522(self.PCD_TRANSCEIVE, buff)
-        
+
         if not (status == self.MI_OK) or not (backLen == 4) or not ((backData[0] & 0x0F) == 0x0A):
             status = self.MI_ERR
-        
+
         if status == self.MI_OK:
             buff = []
-            
+
             for i in range(16):
                 buff.append(writeData[i])
-                
+
             crc = self.CalulateCRC_MFRC522(buff)
-            
+
             buff.append(crc[0])
             buff.append(crc[1])
-            
+
             (status, backData, backLen) = self.Communicate_MFRC522(self.PCD_TRANSCEIVE, buff)
-            
+
             if not (status == self.MI_OK) or not (backLen == 4) or not ((backData[0] & 0x0F) == 0x0A):
                 status = self.MI_ERR
                 print("Writing error")
-                
+
         return status
-    
-    
+
+
 
     def DumpClassic1K(self, key, uid):
         for i in range(64):
@@ -391,8 +391,8 @@ class MFRC522:
                 self.MFRC522_Read(i)
             else:
                 print("Authentication error")
-    
-    
+
+
     def Init(self):
         self.Reset_MFRC522()
         self.Write_MFRC522(self.TModeReg, 0x8D)
