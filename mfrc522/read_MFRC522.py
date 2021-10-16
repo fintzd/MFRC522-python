@@ -27,10 +27,9 @@ class Read_KEY:
     
     def __init__(self):
         self.READER = MFRC522()
-        self.KEY = [0xFF,0xFF,0xFF,0xFF,0xFF,0xFF]
+        self.KEY = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
         self.DATALOCATION = [8, 9, 10]
         
     def read_info(self):
-      try:
-          (status, TagType) = self.READER.Request_MFRC522(self.READER.PICC_REQIDL)
-        
+        try:
+            (status, TagType) = self.READER.Request_MFRC522(self.READER.PICC_REQIDL)
