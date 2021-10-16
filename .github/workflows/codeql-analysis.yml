@@ -76,6 +76,6 @@ jobs:
       env:
           VALIDATE_PYTHON_BLACK: false
           VALIDATE_PYTHON_FLAKE8: false
-          VALIDATE_PYTHON_MYPY: true
+          # VALIDATE_PYTHON_MYPY: true
           # use the linter, but don't make it necessary to pass to validate code
           DISABLE_ERRORS: true
