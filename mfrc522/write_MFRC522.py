@@ -38,17 +38,17 @@ class Write_KEY:
             n = n * 256 + uid[i]
         return n
 
-    
+
     def write_info(self, data):
         (status, TagType) = self.READER.Request_MFRC522(self.READER.PICC_REQIDL)
         if status != self.READER.MI_OK:
             return None, None
-        
+
         (status, uid) = self.READER.Anticoll_MFRC522()
         if status != self.READER.MI_OK:
             return None, None
-        
+
         self.READER.SelectTag_MFRC522(uid)
         status = self.READER.Auth_MFRC522(self.READER.PICC_AUTHENT1A, 11, self.KEY, uid)
 
-        self.READER.MFRC522_Read(11)
+        self.READER.Read(11)
