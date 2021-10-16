@@ -22,7 +22,6 @@
 import RPi.GPIO as GPIO
 import spidev
 from time import sleep
-import logging
 
 
 class MFRC522:
