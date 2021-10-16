@@ -106,7 +106,7 @@ class MFRC522:
     TReloadRegL         = 0x2D
     TCounterValueRegH   = 0x2E
     TCounterValueRegL   = 0x2F
-    
+
     Reserved30          = 0x30
     TestSel1Reg         = 0x31
     TestSel2Reg         = 0x32
@@ -185,7 +185,7 @@ class MFRC522:
         self.SetBitMask_MFRC522(self.FIFOLevelReg, 0x80)
 
         self.Write_MFRC522(self.CommandReg, self.PCD_IDLE)
-        
+
         for i, item in enumerate(sendData):
             self.Write_MFRC522(self.FIFODataReg, sendData[i])
 
