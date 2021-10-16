@@ -55,7 +55,7 @@ class Read_KEY:
                 if block:
             		buff += block
             if buff:
-                 data = ''.join(chr(i) for i in buff)
+                data = ''.join(chr(i) for i in buff)
         
         self.READER.StopCrypto1_MFRC522()
         r_uid = self.uid_to_num(uid)
