@@ -44,8 +44,6 @@ class Read_KEY:
         (status, uid) = self.READER.Anticoll_MFRC522()
         if status != self.READER.MI_OK:
             return None, None
-
-        id = self.uid_to_num(uid)
         
         self.READER.SelectTag_MFRC522(uid)
         status = self.READER.Auth_MFRC522(self.READER.PICC_AUTHENT1A, 11, self.KEY, uid)
@@ -60,4 +58,5 @@ class Read_KEY:
                  data = ''.join(chr(i) for i in buff)
         
         self.READER.StopCrypto1_MFRC522()
-        return id, data
+        r_uid = self.uid_to_num(uid)
+        return r_uid, data
