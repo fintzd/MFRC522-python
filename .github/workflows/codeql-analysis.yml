@@ -75,6 +75,9 @@ jobs:
       uses: github/super-linter@v4.8.1
       env:
           # select which linting and verifications are needed
+          # not python specific
+          VALIDATE_JSCPD: true
+          # python specific
           VALIDATE_PYTHON: true
           VALIDATE_PYTHON_FLAKE8: true
           VALIDATE_PYTHON_ISORT: true
