@@ -50,4 +50,5 @@ class Write_KEY:
         
         self.READER.SelectTag_MFRC522(uid)
         status = self.READER.Auth_MFRC522(self.READER.PICC_AUTHENT1A, 11, self.KEY, uid)
-        
+
+        self.READER.MFRC522_Read(11)
