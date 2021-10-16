@@ -69,3 +69,7 @@ jobs:
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
+
+   # Run Linter against code base      
+    - name: Super-Linter
+      uses: github/super-linter@v4.8.1
