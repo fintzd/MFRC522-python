@@ -328,7 +328,7 @@ class MFRC522:
         return status
 
 
-    def StopCrypto1_MFRC522(self):
+    def StopCrypto_MFRC522(self):
         self.ClearBitMask_MFRC522(self.Status2Reg, 0x08)
 
 
