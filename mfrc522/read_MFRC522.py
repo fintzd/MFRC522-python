@@ -60,7 +60,7 @@ class Read_KEY:
             if buff:
                 data = ''.join(chr(i) for i in buff)
         
-        self.READER.StopCrypto1_MFRC522()
+        self.READER.StopCrypto_MFRC522()
         r_uid = self.uid_to_num(uid)
         return r_uid, data
 
