@@ -52,3 +52,15 @@ class Write_KEY:
         status = self.READER.Auth_MFRC522(self.READER.PICC_AUTHENT1A, 11, self.KEY, uid)
 
         self.READER.Read(11)
+
+        if status == self.READER.MI_OK:
+          buff = bytearray()
+          buff.extend(bytearray(data.ljust(len(self.DATALOCATION) * 16).encode('ascii')))
+          i = 0
+          for block_num in self.DATALOCATION:
+            self.READER.Write(block_num, buff[(i*16):(i+1)*16])
+            i += 1
+
+        self.READER.StopCrypto_MFRC522()
+        r_uid = self.uid_to_num(uid)
+        return r_uid, data[0:(len(self.DATALOCATION) * 16)]
