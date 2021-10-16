@@ -53,7 +53,7 @@ class Read_KEY:
             for block_num in self.DATALOCATION:
                 block = self.READER.Read(block_num) 
                 if block:
-            		buff += block
+                    buff += block
             if buff:
                 data = ''.join(chr(i) for i in buff)
         
