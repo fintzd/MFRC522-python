@@ -18,6 +18,7 @@
 #    without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
 #    See the GNU Lesser General Public License for more details.
 
+from time import sleep
 
 import RPi.GPIO as GPIO
 from MFRC522 import MFRC522
@@ -35,6 +36,7 @@ class Read_KEY:
         for i in range(0, 5):
             n = n * 256 + uid[i]
         return n
+
 
     def read_info(self):
         (status, TagType) = self.READER.Request_MFRC522(self.READER.PICC_REQIDL)
@@ -60,3 +62,11 @@ class Read_KEY:
         self.READER.StopCrypto1_MFRC522()
         r_uid = self.uid_to_num(uid)
         return r_uid, data
+
+
+    def read_loop(self):
+        uid, data = self.read_info()
+        while not uid or not data:
+            uid, data = self.read_info()
+            sleep(0.01)
+        return uid, data
