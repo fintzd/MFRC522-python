@@ -389,7 +389,7 @@ class MFRC522:
         for i in range(64):
             status = self.Auth_MFRC522(self.PICC_AUTHENT1A, i, key, uid)
             if status == self.MI_OK:
-                self.MFRC522_Read(i)
+                self.Read(i)
             else:
                 print("Authentication error")
 
