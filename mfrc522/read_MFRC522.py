@@ -29,7 +29,35 @@ class Read_KEY:
         self.READER = MFRC522()
         self.KEY = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
         self.DATALOCATION = [8, 9, 10]
+
+    def uid_to_num(self, uid):
+        n = 0
+        for i in range(0, 5):
+            n = n * 256 + uid[i]
+        return n
+
+    def read_info(self):
+        (status, TagType) = self.READER.Request_MFRC522(self.READER.PICC_REQIDL)
+        if status != self.READER.MI_OK:
+            return None, None
         
-#    def read_info(self):
-#        try:
-#            (status, TagType) = self.READER.Request_MFRC522(self.READER.PICC_REQIDL)
+        (status, uid) = self.READER.Anticoll_MFRC522()
+        if status != self.READER.MI_OK:
+            return None, None
+
+        id = self.uid_to_num(uid)
+        
+        self.READER.SelectTag_MFRC522(uid)
+        status = self.READER.Auth_MFRC522(self.READER.PICC_AUTHENT1A, 11, self.KEY, uid)
+        
+        buff = []
+        if status == self.READER.MI_OK:
+            for block_num in self.DATALOCATION:
+                block = self.READER.Read(block_num) 
+                if block:
+            		buff += block
+            if buff:
+                 data = ''.join(chr(i) for i in buff)
+        
+        self.READER.StopCrypto1_MFRC522()
+        return id, data
