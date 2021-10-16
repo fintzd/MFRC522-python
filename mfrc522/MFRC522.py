@@ -294,7 +294,7 @@ class MFRC522:
     def SelectTag_MFRC522(self, serNum):
         backData = []
         buff = []
-        buff.append(self.PICC_SElECTTAG)
+        buff.append(self.PICC_SELECTTAG)
         buff.append(0x70)
         
         for i in range(5):
