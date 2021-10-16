@@ -74,8 +74,11 @@ jobs:
     - name: Super-Linter
       uses: github/super-linter@v4.8.1
       env:
-          VALIDATE_PYTHON_BLACK: false
-          # VALIDATE_PYTHON_FLAKE8: false
-          # VALIDATE_PYTHON_MYPY: false
-          # use the linter, but don't make it necessary to pass to validate code
+          # select which linting and verifications are needed
+          VALIDATE_PYTHON: true
+          VALIDATE_PYTHON_FLAKE8: true
+          VALIDATE_PYTHON_ISORT: true
+          VALIDATE_PYTHON_MYPY: true
+          VALIDATE_PYTHON_PYLINT: true
+          # don't make linting required to validate code
           DISABLE_ERRORS: true
