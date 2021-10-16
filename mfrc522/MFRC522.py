@@ -21,7 +21,6 @@
 
 import RPi.GPIO as GPIO
 import spidev
-import signal
 from time import sleep
 import logging
 
