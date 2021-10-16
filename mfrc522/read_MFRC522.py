@@ -17,3 +17,11 @@
 #    MFRC522-Python is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
 #    without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
 #    See the GNU Lesser General Public License for more details.
+
+
+import RPi.GPIO as GPIO
+
+
+DEFAULT_KEY = [0xFF,0xFF,0xFF,0xFF,0xFF,0xFF]
+KEY = DEFAULT_KEY
+RFID = MFRC522.MFRC522()
