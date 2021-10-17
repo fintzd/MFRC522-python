@@ -21,7 +21,6 @@
 
 from time import sleep
 
-import RPi.GPIO as GPIO
 from MFRC522 import MFRC522
 
 
