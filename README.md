@@ -1,12 +1,11 @@
 # MFRC522-python
 
-Python library to read/write RFID tags via the budget MFRC522 RFID module.
+Python library to read and write RFID tags via the MFRC522 RFID module.
 
 <br>
 
 ## First Steps
 
-<br>
 
 ### Enable SPI
 
@@ -15,7 +14,6 @@ In the menu that pops up select `5 Interfacing options`.<br>
 And finally enable SPI by selecting `P4 SPI`.<br>
 For the changes to take effect, reboot the raspberry pi with? `sudo reboot`.<br>
 
-<br>
 
 ### Wiring the Pins
 
@@ -32,3 +30,15 @@ GND   | GND
 RST   | 25
 3.3V  | 3.3V
 
+<br>
+
+Pin numbers in the table above are based on the GPIO numbering, **not the pin numbering**. You can check out the following image for more information about how to wire the reader.
+
+![GPIO-Pinout-Diagram-2](https://user-images.githubusercontent.com/35842457/137625592-c4a3e099-f2b6-406f-b158-6eb90a4393b3.jpg)
+*image source: [https://www.raspberrypi.com/](https://www.raspberrypi.com/documentation/computers/os.html)*
+
+<br>
+
+## Installation and Setup
+
+You can either simple clone this repository to where you want to use it and import the scripts into your code from there, or install this as a module.
