@@ -83,10 +83,11 @@ sudo python3 setup.py install
 
 ### Setup - As a Python Module
 
-**TODO**
+***TODO***
 
 
 <br>
 
 ## Just a Simple Use Case
 
+***TODO***
