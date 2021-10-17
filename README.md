@@ -50,6 +50,7 @@ First install the dependencies required to run this code, with the following bas
 
 ```bash
 sudo apt install git python-dev -y
+python3 -m pip install spidev
 ```
 
 
