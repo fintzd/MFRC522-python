@@ -27,6 +27,7 @@ from MFRC522 import MFRC522
 class Read_KEY:
 
     def __init__(self):
+        from MFRC522 import MFRC522
         self.READER = MFRC522()
         self.KEY = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
         self.DATALOCATION = [8, 9, 10]
