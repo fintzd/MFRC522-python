@@ -4,7 +4,7 @@ Python library to read and write RFID tags via the MFRC522 RFID module.
 
 <br>
 
-## First Steps
+## First Things First
 
 
 ### Enable SPI
