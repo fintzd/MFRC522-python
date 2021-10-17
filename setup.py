@@ -2,7 +2,7 @@ import setuptools
 
 
 setuptools.setup(
-    name="MFRC522",
+    name="rfid522",
     version="0.0.1",
     author="fintzd",
     author_email="fintzd@tuta.io",
@@ -14,6 +14,7 @@ setuptools.setup(
         'spidev'
         ],
     classifiers=[
+        "Development Status :: 4 - Beta",
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",
         "Operating System :: POSIX :: Linux",
