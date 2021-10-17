@@ -63,7 +63,7 @@ cd MFRC522-python/
 ```
 
 
-### Setup - Module Way
+### Setup - With `setup.py`
 
 First install the dependencies required to run this code, which are git & python-dev. You can do this with the following bash commands.
 
@@ -71,7 +71,7 @@ First install the dependencies required to run this code, which are git & python
 sudo apt install git python-dev -y
 ```
 
-Then you can clone this repository, and use the `setup.py` file to set this up as a python3 module. To do this, you can use the following commands in the top level directory. *Mind you, that we are using python3 in this repository.*
+Then you can use the `setup.py` file to set this script up. To do this, use the following commands in the top level directory. *Mind you, that we are using python3 in this repository.*
 
 ```bash
 cd ~
@@ -79,6 +79,12 @@ git clone https://github.com/fintzd/MFRC522-python.git
 cd MFRC522-python/
 sudo python3 setup.py install
 ```
+
+
+### Setup - As a Python Module
+
+**TODO**
+
 
 <br>
 
