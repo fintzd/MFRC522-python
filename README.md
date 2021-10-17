@@ -71,7 +71,7 @@ First install the dependencies required to run this code, which are git & python
 sudo apt install git python-dev -y
 ```
 
-Then you can use the `setup.py` file to set this script up. To do this, use the following commands in the top level directory. *Mind you, that we are using python3 in this repository.*
+Then you can use the `setup.py` file to set this script up. To do this, use the following commands in the top level directory (or wherever you want to use it). *Mind you, that we are using python3 in this repository.*
 
 ```bash
 cd ~
