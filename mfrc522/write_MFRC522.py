@@ -66,9 +66,9 @@ class Write_KEY:
         return r_uid, data[0:(len(self.DATALOCATION) * 16)]
 
 
-    def write_loop(self):
-        uid, data = self.write_info()
+    def write_loop(self, input):
+        uid, data = self.write_info(input)
         while not uid or not data:
-            uid, data = self.write_info()
+            uid, data = self.write_info(input)
             sleep(0.01)
         return uid, data
