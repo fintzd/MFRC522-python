@@ -64,3 +64,11 @@ class Write_KEY:
         self.READER.StopCrypto_MFRC522()
         r_uid = self.uid_to_num(uid)
         return r_uid, data[0:(len(self.DATALOCATION) * 16)]
+
+
+    def write_loop(self):
+        uid, data = self.write_info()
+        while not uid or not data:
+            uid, data = self.write_info()
+            sleep(0.01)
+        return uid, data
