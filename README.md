@@ -42,3 +42,22 @@ Pin numbers in the table above are based on the GPIO numbering, **not the pin nu
 ## Installation and Setup
 
 You can either simple clone this repository to where you want to use it and import the scripts into your code from there, or install this as a module.
+
+
+### Clone and Edit
+
+First install the dependencies required to run this code, with the following bash command.
+
+```bash
+sudo apt install git python-dev -y
+```
+
+
+Simply use the following bash command to clone the repo. Once executed, you're in and ready to go.
+
+```bash
+cd ~
+git clone https://github.com/fintzd/MFRC522-python.git
+cd MFRC522-python/
+```
+
