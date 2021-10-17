@@ -44,9 +44,9 @@ Pin numbers in the table above are based on the GPIO numbering, **not the pin nu
 You can either simple clone this repository to where you want to use it and import the scripts into your code from there, or install this as a module.
 
 
-### Clone and Edit
+### Setup - Clone and Edit
 
-First install the dependencies required to run this code, with the following bash command.
+First install the dependencies required to run this code, which are git, python-dev, and spidev. You can do this with the following bash commands.
 
 ```bash
 sudo apt install git python-dev -y
@@ -54,11 +54,33 @@ python3 -m pip install spidev
 ```
 
 
-Simply use the following bash command to clone the repo. Once executed, you're in and ready to go.
+Simply use the following bash commands to clone the repo. Once executed, you're in and ready to go.
 
 ```bash
 cd ~
 git clone https://github.com/fintzd/MFRC522-python.git
 cd MFRC522-python/
 ```
+
+
+### Setup - Module Way
+
+First install the dependencies required to run this code, which are git & python-dev. You can do this with the following bash commands.
+
+```bash
+sudo apt install git python-dev -y
+```
+
+Then you can clone this repository, and use the `setup.py` file to set this up as a python3 module. To do this, you can use the following commands in the top level directory. *Mind you, that we are using python3 in this repository.*
+
+```bash
+cd ~
+git clone https://github.com/fintzd/MFRC522-python.git
+cd MFRC522-python/
+python3 setup.py install
+```
+
+<br>
+
+## Just a Simple Use Case
 
