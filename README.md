@@ -77,7 +77,7 @@ Then you can clone this repository, and use the `setup.py` file to set this up a
 cd ~
 git clone https://github.com/fintzd/MFRC522-python.git
 cd MFRC522-python/
-python3 setup.py install
+sudo python3 setup.py install
 ```
 
 <br>
