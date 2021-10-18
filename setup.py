@@ -1,6 +1,5 @@
 import setuptools
 
-
 setuptools.setup(
     name="rfid522",
     version="0.0.1",
