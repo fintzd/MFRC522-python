@@ -1,11 +1,17 @@
-import setuptools
+from setuptools import setup, find_packages
 
-setuptools.setup(
+
+VERSION = "0.0.1"
+DESCRIPTION = "Reading and writing RFID tags with python."
+LONG_DESCRIPTION = "Python3 library to read & write RFID tags with a physical MFRC522 RFID module and a Raspberry Pi."
+
+setup(
     name="rfid522",
-    version="0.0.1",
+    version=VERSION,
     author="fintzd",
     author_email="fintzd@tuta.io",
-    description="Python3 library to read/write RFID tags via the MFRC522 RFID module.",
+    description=DESCRIPTION,
+    long_description=LONG_DESCRIPTION,
     url="https://github.com/fintzd/MFRC522-python",
     packages=setuptools.find_packages(),
     install_requires=[
