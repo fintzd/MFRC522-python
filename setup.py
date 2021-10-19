@@ -13,7 +13,7 @@ setup(
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     url="https://github.com/fintzd/MFRC522-python",
-    packages=setuptools.find_packages(),
+    packages=find_packages(),
     install_requires=[
         'RPi.GPIO',
         'spidev'
