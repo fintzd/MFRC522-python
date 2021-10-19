@@ -6,7 +6,7 @@ DESCRIPTION = "Reading and writing RFID tags with python."
 LONG_DESCRIPTION = "Python3 library to read & write RFID tags with a physical MFRC522 RFID module and a Raspberry Pi."
 
 setup(
-    name="rfid522",
+    name="MFRC522",
     version=VERSION,
     author="fintzd",
     author_email="fintzd@tuta.io",
@@ -15,7 +15,7 @@ setup(
     url="https://github.com/fintzd/MFRC522-python",
     packages=find_packages(),
     install_requires=['RPi.GPIO', 'spidev'],
-    keywords=['python', 'first package'],
+    keywords=['python', 'python3', 'RFID', 'MFRC522'],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Programming Language :: Python :: 3",
