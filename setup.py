@@ -14,10 +14,8 @@ setup(
     long_description=LONG_DESCRIPTION,
     url="https://github.com/fintzd/MFRC522-python",
     packages=find_packages(),
-    install_requires=[
-        'RPi.GPIO',
-        'spidev'
-        ],
+    install_requires=['RPi.GPIO', 'spidev'],
+    keywords=['python', 'first package'],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Programming Language :: Python :: 3",
