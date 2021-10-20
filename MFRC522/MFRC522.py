@@ -21,6 +21,8 @@
 
 from time import sleep
 
+from datetime import datetime as dt
+
 import RPi.GPIO as GPIO
 import spidev
 
@@ -343,7 +345,8 @@ class MFRC522:
             self.PCD_TRANSCEIVE, recvData)
 
         if not (status == self.MI_OK):
-            print("Reading error")
+            now = dt.now().strftime("%Y%m%d-%H:%M:%S")
+            print(f"{now} - Reading error")
         return backData
 
     def Write(self, blockAddr, writeData):
@@ -378,7 +381,8 @@ class MFRC522:
 
             if not (status == self.MI_OK) or not (backLen == 4) or not ((backData[0] & 0x0F) == 0x0A):
                 status = self.MI_ERR
-                print("Writing error")
+                now = dt.now().strftime("%Y%m%d-%H:%M:%S")
+                print(f"{now} - Writing error")
         return status
 
     def DumpClassic1K(self, key, uid):
@@ -387,7 +391,8 @@ class MFRC522:
             if status == self.MI_OK:
                 self.Read(i)
             else:
-                print("Authentication error")
+                now = dt.now().strftime("%Y%m%d-%H:%M:%S")
+                print(f"{now} - Authentication error")
 
     def Init(self):
         self.Reset_MFRC522()
